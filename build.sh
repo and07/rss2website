@@ -24,8 +24,14 @@ apt install golang
 
 echo ''
 
+figlet install Get dependencies
+
 go get github.com/gorilla/mux
 
 go get github.com/gosimple/slug
 
 go get github.com/mmcdole/gofeed
+
+
+#figlet install rss2website
+#go get github.com/and07/rss2website

@@ -2,13 +2,16 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
 
-	"github.com/gorilla/mux"
 	"github.com/gosimple/slug"
+	"github.com/julienschmidt/httprouter"
 	"github.com/mmcdole/gofeed"
+	"github.com/oxtoacart/bpool"
 )
 
 type RssList []struct {
@@ -32,6 +35,78 @@ type PostPageData struct {
 	Pages     map[string]Post
 }
 
+type TemplateConfig struct {
+	TemplateLayoutPath  string
+	TemplateIncludePath string
+}
+
+var templates map[string]*template.Template
+var bufpool *bpool.BufferPool
+
+var mainTmpl = `{{define "main" }} {{ template "base" . }} {{ end }}`
+
+var templateConfig TemplateConfig
+
+func loadConfiguration() {
+	templateConfig.TemplateLayoutPath = "tpl/layouts/"
+	templateConfig.TemplateIncludePath = "tpl/"
+}
+
+func loadTemplates() {
+	if templates == nil {
+		templates = make(map[string]*template.Template)
+	}
+
+	layoutFiles, err := filepath.Glob(templateConfig.TemplateLayoutPath + "*.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	includeFiles, err := filepath.Glob(templateConfig.TemplateIncludePath + "*.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mainTemplate := template.New("main")
+
+	mainTemplate, err = mainTemplate.Parse(mainTmpl)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, file := range includeFiles {
+		fileName := filepath.Base(file)
+		files := append(layoutFiles, file)
+		templates[fileName], err = mainTemplate.Clone()
+		if err != nil {
+			log.Fatal(err)
+		}
+		templates[fileName] = template.Must(templates[fileName].ParseFiles(files...))
+	}
+
+	log.Println("templates loading successful")
+
+	bufpool = bpool.NewBufferPool(64)
+	log.Println("buffer allocation successful")
+}
+
+func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
+	tmpl, ok := templates[name]
+	if !ok {
+		http.Error(w, fmt.Sprintf("The template %s does not exist.", name),
+			http.StatusInternalServerError)
+	}
+
+	buf := bufpool.Get()
+	defer bufpool.Put(buf)
+
+	err := tmpl.Execute(buf, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	buf.WriteTo(w)
+}
 func getRSSList() RssList {
 	//https://gist.github.com/stungeye/fe88fc810651174d0d180a95d79a8d97
 	j := `[
@@ -52,6 +127,9 @@ func getRSSList() RssList {
 func main() {
 	log.SetFlags(log.Flags() | log.Lshortfile)
 
+	loadConfiguration()
+	loadTemplates()
+
 	fp := gofeed.NewParser()
 
 	var posts PostPageData
@@ -63,17 +141,20 @@ func main() {
 
 		pages := make(map[string]Post)
 		for _, v := range feed.Items {
-			log.Printf("%#v \n", v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"])
+			if v.Extensions["media"]["group"] != nil {
+				log.Printf("%#v \n", v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"])
 
-			pages[slug.Make(v.Title)] = Post{
-				Title:       v.Title,
-				Slug:        slug.Make(v.Title),
-				Link:        v.Link,
-				Description: v.Description,
-				Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
-				SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
-				Done:        false,
+				pages[slug.Make(v.Title)] = Post{
+					Title:       v.Title,
+					Slug:        slug.Make(v.Title),
+					Link:        v.Link,
+					Description: v.Description,
+					Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
+					SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
+					Done:        false,
+				}
 			}
+
 		}
 		data := PostPageData{
 			PageTitle: feed.Title,
@@ -88,19 +169,17 @@ func main() {
 	log.Println()
 	log.Println()
 
-	r := mux.NewRouter()
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("tpl/layout.html"))
-		tmpl.Execute(w, posts)
+	r := httprouter.New()
+
+	r.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		renderTemplate(w, "list.html", posts)
 	})
 
-	r.HandleFunc("/{slug}", func(w http.ResponseWriter, r *http.Request) {
+	r.GET("/:slug", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-		vars := mux.Vars(r)
-		slug := vars["slug"]
+		slug := ps.ByName("slug")
 
-		tmpl := template.Must(template.ParseFiles("tpl/detail.html"))
-		tmpl.Execute(w, posts.Pages[slug])
+		renderTemplate(w, "detail.html", posts.Pages[slug])
 	})
 
 	http.ListenAndServe(":3000", r)
