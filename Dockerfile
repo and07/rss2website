@@ -1,6 +1,6 @@
 From golang:latest
 
-RUN go get github.com/oxtoacart/bpool && go get github.com/julienschmidt/httprouter && go get github.com/gosimple/slug && go get github.com/mmcdole/gofeed
+RUN go get github.com/oxtoacart/bpool && go get github.com/julienschmidt/httprouter && go get github.com/gosimple/slug && go get github.com/mmcdole/gofeed && go get github.com/and07/rss2website/proto
 
 WORKDIR /go/src/rss2site
 COPY . /go/src/rss2site

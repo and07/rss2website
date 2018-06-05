@@ -9,7 +9,7 @@ import (
 )
 
 type IRss interface {
-	GetRssData(string) proto.PostPageData
+	GetRssData() proto.PostPageData
 	Name() string
 }
 
@@ -21,14 +21,18 @@ func main() {
 	tpl := NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
 	tpl.Init()
 
-	foxnews := Foxnews{}
-	rss := []IRss{&foxnews}
 	rssList := getRSSList()
 	list := rssList.GetList()
-	posts := make(map[string]proto.PostPageData)
+
+	foxnews := NewFoxnews(list)
+	defer foxnews.Closed()
+
+	rss := []IRss{foxnews}
+
+	posts := make(map[string]IRss)
 	for _, v := range rss {
 		log.Println(list[v.Name()])
-		posts[v.Name()] = v.GetRssData(list[v.Name()])
+		posts[v.Name()] = v
 		///fmt.Print("%#v \n", feed)
 	}
 
@@ -41,15 +45,24 @@ func main() {
 	r.ServeFiles("/static/*filepath", http.Dir("static"))
 
 	r.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		tpl.RenderTemplate(w, "list.html", posts)
+		log.Println("list")
+		p := make(map[string]proto.PostPageData)
+		for _, v := range rss {
+			//log.Println(list[v.Name()])
+			p[v.Name()] = v.GetRssData()
+			///fmt.Print("%#v \n", feed)
+		}
+
+		tpl.RenderTemplate(w, "list.html", p)
 	})
 
 	r.GET("/post/:rss/:slug", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
+		log.Println("detail")
 		slug := ps.ByName("slug")
 		rss := ps.ByName("rss")
+		ir := posts[rss].GetRssData()
 
-		tpl.RenderTemplate(w, "detail.html", posts[rss].Pages[slug])
+		tpl.RenderTemplate(w, "detail.html", ir.Pages[slug])
 	})
 
 	http.ListenAndServe(":3000", r)

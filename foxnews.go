@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"sync"
+	"time"
 
 	proto "github.com/and07/rss2website/proto"
 	"github.com/gosimple/slug"
@@ -9,43 +11,104 @@ import (
 )
 
 type Foxnews struct {
+	ticker *time.Ticker
+	mx     sync.RWMutex
+	exit   chan struct{}
+	data   map[string]*proto.Post
+	urlRss string
+	title  string
+	image  string
 }
 
-func (fn *Foxnews) Name() string {
+func NewFoxnews(list map[string]string) *Foxnews {
+
+	f := Foxnews{}
+	urlRss := list[f.Name()]
+	f.urlRss = urlRss
+	f.data = make(map[string]*proto.Post)
+	f.exit = make(chan struct{})
+	f.getData()
+	f.Start()
+	return &f
+}
+
+func (f *Foxnews) Start() {
+
+	f.ticker = time.NewTicker(30 * time.Minute)
+	go func() {
+
+		for {
+			select {
+			case <-f.ticker.C:
+				go func() {
+					f.mx.Lock()
+					defer f.mx.Unlock()
+					defer log.Println("Tick")
+
+					f.getData()
+
+					//log.Printf("coin pair = %#v\n", marketName)
+					//log.Printf("book = %#v\n", book)
+					//log.Printf("history = %#v\n", history)
+				}()
+			case <-f.exit:
+				log.Println("Exit")
+				f.ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func (f *Foxnews) Closed() {
+	f.exit <- struct{}{}
+	close(f.exit)
+}
+
+func (f *Foxnews) Name() string {
 	return "foxnews"
 }
 
-func (fn *Foxnews) GetRssData(urlRss string) proto.PostPageData {
+func (f *Foxnews) GetRssData() proto.PostPageData {
+	f.mx.RLock()
+	defer f.mx.RUnlock()
+
+	return proto.PostPageData{
+		PageTitle: f.title,
+		PageImage: f.image,
+		Pages:     f.data,
+	}
+}
+
+func (f *Foxnews) getData() {
 	fp := gofeed.NewParser()
 
-	var posts proto.PostPageData
-
-	feed, _ := fp.ParseURL(urlRss)
+	feed, errFeed := fp.ParseURL(f.urlRss)
+	if errFeed != nil {
+		log.Println(errFeed)
+		return
+	}
 	log.Println(feed.Title)
 	log.Println(feed.Image.URL)
 
-	pages := make(map[string]*proto.Post)
 	for _, v := range feed.Items {
 		if v.Extensions["media"]["group"] != nil {
 			log.Printf("%#v \n", v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"])
 
-			pages[slug.Make(v.Title)] = &proto.Post{
-				Title:       v.Title,
-				Slug:        slug.Make(v.Title),
-				Link:        v.Link,
-				Description: v.Description,
-				Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
-				SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
+			if _, ok := f.data[slug.Make(v.Title)]; !ok {
+				f.data[slug.Make(v.Title)] = &proto.Post{
+					Title:       v.Title,
+					Slug:        slug.Make(v.Title),
+					Link:        v.Link,
+					Description: v.Description,
+					Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
+					SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
+				}
 			}
+
 		}
 
 	}
-	data := proto.PostPageData{
-		PageTitle: feed.Title,
-		PageImage: feed.Image.URL,
-		Pages:     pages,
-	}
-	posts = data
-
-	return posts
+	f.title = feed.Title
+	f.image = feed.Image.URL
 }

@@ -68,7 +68,7 @@ body {
 -----------------------------------------------------------------------------*/
 .header {
 	height: 150px;
-	background: #FFE680;
+	/*background: #FFE680;*/
 }
 
 
@@ -88,6 +88,6 @@ body {
 	min-width: 300px;
 	max-width: 1000px;
 	height: 100px;
-	background: #BFF08E;
+	/*background: #BFF08E;*/
 	position: relative;
 }
