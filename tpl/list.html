@@ -1,6 +1,10 @@
 {{define "title"}}List{{end}}
 
 {{define "content"}}
+
+{{ range $key, $value := . }}
+{{ $key }} <br>
+
     <h1>{{.PageTitle}}</h1>
     <ul>
         {{range .Pages}}
@@ -8,9 +12,15 @@
             {{if .Done}}
                 <li class="done">{{.Title}}</li>
             {{else}}
-                <li><a href="/{{.Slug}}"><img src = "{{.SourceImage}}" style="width:40px">&nbsp; {{.Title}}</a></li>
+                <li><a href="/post/{{ $key }}/{{.Slug}}"><img src = "{{.SourceImage}}" style="width:40px">&nbsp; {{.Title}}</a></li>
             {{end}}
         {{end}}
     </ul>
+
+
+
+{{ end }}
+
+
 
 {{end}}
