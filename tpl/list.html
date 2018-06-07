@@ -9,7 +9,7 @@
     <ul>
         {{range .Pages}}
 
-                <li><a href="/post/{{ $key }}/{{.Slug}}"><img src = "{{.SourceImage}}" style="width:40px">&nbsp; {{.Published | formatAsDate}}&nbsp; {{.Title}}</a></li>
+                <li><a href="/post/{{ $key }}/{{.Slug}}"><img src = "{{.SourceImage}}" style="height:45px;">&nbsp; {{.Published | formatAsDate}}&nbsp; {{.Title}}</a></li>
 
         {{end}}
     </ul>

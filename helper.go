@@ -23,5 +23,7 @@ func getRSSList() proto.RssList {
 
 	l := make(map[string]string)
 	l["foxnews"] = "http://feeds.foxnews.com/foxnews/latest"
+	l["cnn"] = "http://rss.cnn.com/rss/money_topstories.rss"
+	l["forbes"] = "https://www.forbes.com/real-time/feed2/"
 	return proto.RssList{List: l}
 }

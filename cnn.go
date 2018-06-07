@@ -1,0 +1,123 @@
+package main
+
+import (
+	"log"
+	"sync"
+	"time"
+
+	proto "github.com/and07/rss2website/proto"
+	"github.com/gosimple/slug"
+	"github.com/mmcdole/gofeed"
+)
+
+type Cnn struct {
+	ticker *time.Ticker
+	mx     sync.RWMutex
+	exit   chan struct{}
+	data   map[string]*proto.Post
+	urlRss string
+	title  string
+	image  string
+}
+
+func NewCnn(list map[string]string) *Cnn {
+
+	c := Cnn{}
+	urlRss := list[c.Name()]
+	c.urlRss = urlRss
+	c.data = make(map[string]*proto.Post)
+	c.exit = make(chan struct{})
+	c.getData()
+	c.Start()
+	return &c
+}
+
+func (c *Cnn) Start() {
+
+	c.ticker = time.NewTicker(30 * time.Minute)
+	go func() {
+
+		for {
+			select {
+			case <-c.ticker.C:
+				go func() {
+					c.mx.Lock()
+					defer c.mx.Unlock()
+					defer log.Println("Tick")
+
+					c.getData()
+
+					//log.Printf("coin pair = %#v\n", marketName)
+					//log.Printf("book = %#v\n", book)
+					//log.Printf("history = %#v\n", history)
+				}()
+			case <-c.exit:
+				log.Println("Exit")
+				c.ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func (c *Cnn) Closed() {
+	c.exit <- struct{}{}
+	close(c.exit)
+}
+
+func (c *Cnn) Name() string {
+	return "cnn"
+}
+
+func (c *Cnn) GetRssData() proto.PostPageData {
+	c.mx.RLock()
+	defer c.mx.RUnlock()
+
+	return proto.PostPageData{
+		PageTitle: c.title,
+		PageImage: c.image,
+		Pages:     c.data,
+	}
+}
+
+func (c *Cnn) getData() {
+	fp := gofeed.NewParser()
+
+	feed, errFeed := fp.ParseURL(c.urlRss)
+	if errFeed != nil {
+		log.Println(errFeed)
+		return
+	}
+	log.Println(feed.Title)
+	log.Println(feed.Image.URL)
+
+	c.title = feed.Title
+	c.image = feed.Image.URL
+
+	for _, v := range feed.Items {
+
+		if v.Extensions["media"]["thumbnail"] != nil {
+			//log.Printf("%#v \n", v.Extensions["media"]["thumbnail"][0].Attrs["url"])
+
+			if _, ok := c.data[slug.Make(v.Title)]; !ok {
+
+				t1, _ := time.Parse(time.RFC1123, v.Published)
+
+				c.data[slug.Make(v.Title)] = &proto.Post{
+					Published:   t1.Unix(),
+					Categories:  v.Categories,
+					Title:       v.Title,
+					Slug:        slug.Make(v.Title),
+					Link:        v.Link,
+					Description: v.Description,
+					Image:       v.Extensions["media"]["thumbnail"][0].Attrs["url"],
+					SourceImage: "//i.cdn.turner.com/money/.element/cnnm-3.0/img/logo/cnnmoney_blue.svg",
+				}
+
+			}
+
+		}
+
+	}
+
+}

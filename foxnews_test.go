@@ -7,7 +7,7 @@ import (
 	proto "github.com/and07/rss2website/proto"
 )
 
-func TestUsersList(t *testing.T) {
+func TestFoxnewsData(t *testing.T) {
 	log.SetFlags(log.Flags() | log.Lshortfile)
 	f := Foxnews{}
 	urlRss := "http://feeds.foxnews.com/foxnews/latest"

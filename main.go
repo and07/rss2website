@@ -27,7 +27,13 @@ func main() {
 	foxnews := NewFoxnews(list)
 	defer foxnews.Closed()
 
-	rss := []IRss{foxnews}
+	cnn := NewCnn(list)
+	defer cnn.Closed()
+
+	forbes := NewForbes(list)
+	defer forbes.Closed()
+
+	rss := []IRss{foxnews, cnn, forbes}
 
 	posts := make(map[string]IRss)
 	for _, v := range rss {

@@ -28,7 +28,10 @@ type Template struct {
 func formatAsDate(t int64) string {
 	tm := time.Unix(t, 0)
 	year, month, day := tm.Date()
-	return fmt.Sprintf("%d/%d/%d", day, month, year)
+	return fmt.Sprintf("%d.%d.%d", day, month, year)
+}
+func safe(s string) template.HTML {
+	return template.HTML(s)
 }
 
 func NewTemplate(templateLayoutPath, templateIncludePath, mainTmpl string) *Template {
@@ -51,6 +54,7 @@ func (t *Template) Init() {
 func (t *Template) loadTemplates() {
 	fmap := template.FuncMap{
 		"formatAsDate": formatAsDate,
+		"safe":         safe,
 	}
 
 	if t.templates == nil {

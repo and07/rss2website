@@ -5,6 +5,6 @@
     <p>
             <img src="{{.Image}}" style="width:500px" >
     </p>
-    <p>{{.Description}}</p>
+    <p>{{.Description | safe}}</p>
     <p><a href="{{.Link}}">FULL >> {{.Title}}</a></p>
 {{end}}
