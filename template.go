@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"time"
 
 	"github.com/oxtoacart/bpool"
 )
@@ -22,6 +23,12 @@ type Template struct {
 	mainTmpl string
 
 	templateConfig TemplateConfig
+}
+
+func formatAsDate(t int64) string {
+	tm := time.Unix(t, 0)
+	year, month, day := tm.Date()
+	return fmt.Sprintf("%d/%d/%d", day, month, year)
 }
 
 func NewTemplate(templateLayoutPath, templateIncludePath, mainTmpl string) *Template {
@@ -42,6 +49,10 @@ func (t *Template) Init() {
 }
 
 func (t *Template) loadTemplates() {
+	fmap := template.FuncMap{
+		"formatAsDate": formatAsDate,
+	}
+
 	if t.templates == nil {
 		t.templates = make(map[string]*template.Template)
 	}
@@ -69,7 +80,7 @@ func (t *Template) loadTemplates() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		t.templates[fileName] = template.Must(t.templates[fileName].ParseFiles(files...))
+		t.templates[fileName] = template.Must(t.templates[fileName].Funcs(fmap).ParseFiles(files...))
 	}
 
 	log.Println("templates loading successful")

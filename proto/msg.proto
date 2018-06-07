@@ -10,6 +10,8 @@ message Post {
     string Link             = 4;
     string Image            = 5;
     string SourceImage      = 6;
+    int64 Published         = 7;
+    repeated string Categories = 8;
 }
 
 

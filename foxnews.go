@@ -91,12 +91,20 @@ func (f *Foxnews) getData() {
 	log.Println(feed.Title)
 	log.Println(feed.Image.URL)
 
+	log.Printf("%#v \n", feed.Items[0].Published)
+	log.Printf("%#v \n", feed.Items[0].Categories)
 	for _, v := range feed.Items {
+
 		if v.Extensions["media"]["group"] != nil {
 			log.Printf("%#v \n", v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"])
 
 			if _, ok := f.data[slug.Make(v.Title)]; !ok {
+
+				t1, _ := time.Parse(time.RFC1123, v.Published)
+
 				f.data[slug.Make(v.Title)] = &proto.Post{
+					Published:   t1.Unix(),
+					Categories:  v.Categories,
 					Title:       v.Title,
 					Slug:        slug.Make(v.Title),
 					Link:        v.Link,
@@ -104,6 +112,7 @@ func (f *Foxnews) getData() {
 					Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
 					SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
 				}
+
 			}
 
 		}
