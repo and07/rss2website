@@ -1,4 +1,5 @@
 {{ define "base" }}
+{{ $domain := "Test.<span>Com</span>" }}
 <!DOCTYPE>
 <html lang="ru">
 <head>
@@ -27,7 +28,7 @@
         <div class="row">
             <div class="col-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="#">Test.<span>Com</span></a>
+                    <a class="navbar-brand" href="/">{{ $domain |safe }}</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -112,7 +113,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <a class="navbar-brand" href="#">Test.<span>com</span></a>
+                <a class="navbar-brand" href="/">{{ $domain |safe }}</a>
                 <div class="footer-menu">
                     <ul>
                         <li class="active"><a href="#"><i class="fa fa-bitcoin"></i>Bitcoin</a></li>
