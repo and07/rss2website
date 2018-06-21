@@ -1,10 +1,23 @@
 {{define "title"}}detail{{end}}
 
 {{define "content"}}
-    <h1>{{.Title}}</h1>
-    <p>
-            <img src="{{.Image}}" style="width:500px" >
-    </p>
-    <p>{{.Description | safe}}</p>
-    <p><a href="{{.Link}}">FULL >> {{.Title}}</a></p>
+
+    <div class="article open">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <a href="{{.Link}}">
+                    <img src="{{.Image}}" class="img-fluid">
+                </a>
+            </div>
+            <div class="col-12 col-md-8">
+                <a href="{{.Link}}" class="title"><h1>{{.Title}}</h1></a>
+                <p class="postheader">
+                    <a href="{{.Link}}" title="{{.SourceTitle}}" class="news-site" ><img src="{{.SourceImage}}" class="img-fluid">{{.SourceTitle}}</a><a class="time">&nbsp; {{.Published | formatAsDate}}</a>
+                </p>
+                <p>{{.Description | safe}}</p>
+            </div>
+            <div class="close"><i class="fas fa-times"></i></div>
+        </div>
+    </div>
+
 {{end}}

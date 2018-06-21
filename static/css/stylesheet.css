@@ -1,0 +1,227 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic&subset=latin,cyrillic);
+
+html, body{
+    overflow-x:hidden;
+}
+body{
+    float:left;
+    width:100%;
+    font-family:"Open Sans", sans-serif;
+    letter-spacing:0.4px;
+    font-size: 16px;
+    position:relative;
+    color: #666666;
+    background: url('../images/bitcoinwall.jpg') no-repeat center top;
+    background-size: cover;
+}
+.bg-white {
+    background: #ffffff;
+}
+.no-padding {
+    padding: 0;
+}
+header {
+    background-color: #e3f2fd;
+    border-bottom: 1px solid #cccccc;
+    box-shadow: 0 5px 4px -4px rgba(0, 0, 0, .1);
+}
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-item.active .nav-link {
+    background-color: #007bff;
+    color: #ffffff;
+    transition: .3s;
+}
+.navbar-light .navbar-nav .nav-link {
+    padding: 1rem;
+    margin: 0 0.5rem;
+}
+
+.menu {
+    background: #ececec;
+}
+.menu ul {
+    list-style-type: none;
+}
+.menu ul li {
+    list-style-type: none;
+    display: inline-block;
+    margin-right: 8px;
+    padding: 8px;
+}
+.menu ul li.active, .menu ul li:hover {
+    background: #dfdae0;
+    color: #e3f2fd;
+}
+.menu ul li.active a {
+    color: #007bff;
+}
+.menu ul li a {
+    list-style-type: none;
+    display: inline-block;
+    color: #007bff;
+}
+.menu ul li a:hover {
+    text-decoration: none;
+}
+.menu ul li a i {
+    margin-right: 4px;
+}
+.result {
+    padding: 0 40px;
+    margin-bottom: 12px;
+    position: relative;
+}
+.result .logo {
+    text-align: left;
+    width: 30px;
+    padding: 4px;
+}
+.result .info {
+    text-align: left;
+}
+.result .count {
+    cursor: pointer;
+}
+.block {
+    background: rgba(255,255,255,.8);
+    display: block;
+    margin-bottom: 16px;
+}
+
+.coinmarketcap-currency-widget > div {
+    min-width: auto !important;
+    border: none !important;
+    border-bottom: 1px solid #ececec !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    display: inline-block;
+    width: 100%;
+}
+.coinmarketcap-currency-widget img {
+    width: 30px !important;
+}
+.block.cpa {
+    display: block;
+    padding: 8px;
+}
+.block.cpa img {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+}
+.block.cpa h3 {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+}
+.block.cpa p {
+    display: block;
+    font-size: 14px;
+    font-weight: 100;
+    color: #000000;
+}
+.footer {
+    background: #f0f2f4;
+    padding: 24px 0 24px 0;
+    font-size: 12px;
+}
+.footer-menu {
+    font-size: 12px;
+}
+.footer-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-menu ul li {
+    list-style-type: none;
+    display: inline-block;
+    margin-right: 8px;
+}
+.footer-menu ul li.active, .footer-menu ul li:hover a {
+    color: #3d3d3d;
+}
+.footer-menu ul li.active a {
+    color: #3d3d3d;
+}
+.footer-menu ul li a {
+    list-style-type: none;
+    display: inline-block;
+    color: #cccccc;
+    font-size: 12px;
+}
+.footer-menu ul li a:hover {
+    text-decoration: none;
+}
+.footer-menu ul li a i {
+    margin-right: 4px;
+}
+.main-info {
+    position: relative;
+}
+.article {
+    padding: 16px;
+    background-color: #e3f2fd;
+    border-bottom: 1px solid #cccccc;
+    box-shadow: 0 5px 4px -4px rgba(0, 0, 0, .1);
+    position: absolute;
+    z-index: 90;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: none;
+}
+.article.open {
+    display: block;
+    position: relative;
+    margin-bottom: 16px;
+}
+.article h1 {
+    font-size: 24px;
+    color: #000000;
+}
+.article .title:hover {
+    text-decoration: navajowhite;
+}
+.article p {
+    font-size: 14px;
+    color: #000000;
+}
+.article .postheader {
+    color: #3d3d3d;
+}
+.article .postheader img {
+    margin-right: 8px;
+}
+.article .close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+}
+.bnr {
+    background-color: #e3f2fd;
+    border-bottom: 1px solid #cccccc;
+    box-shadow: 0 5px 4px -4px rgba(0, 0, 0, .1);
+    padding: 8px 0;
+margin-bottom: 24px;
+}
+.bnr-block {
+    color: #3d3d3d;
+margin-bottom: 12px;
+}
+.bnr-block img {
+    width: 120px;
+margin-right: 8px;
+}
+.bnr-info h3 {
+	font-size: 18px;
+font-weight: bold
+}
+.bnr-info p {
+	font-size: 12px;
+}
+.bnr-info span {
+	font-size: 10px;
+	color: #3d3d3d !important;
+}

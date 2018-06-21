@@ -12,6 +12,7 @@ message Post {
     string SourceImage      = 6;
     int64 Published         = 7;
     repeated string Categories = 8;
+    string SourceTitle      = 9;
 }
 
 

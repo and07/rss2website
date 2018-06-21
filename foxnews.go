@@ -27,7 +27,7 @@ func NewFoxnews(list map[string]string) *Foxnews {
 	f.urlRss = urlRss
 	f.data = make(map[string]*proto.Post)
 	f.exit = make(chan struct{})
-	f.getData()
+	f.data = f.getData()
 	f.Start()
 	return &f
 }
@@ -45,7 +45,7 @@ func (f *Foxnews) Start() {
 					defer f.mx.Unlock()
 					defer log.Println("Tick")
 
-					f.getData()
+					f.data = f.getData()
 
 					//log.Printf("coin pair = %#v\n", marketName)
 					//log.Printf("book = %#v\n", book)
@@ -80,13 +80,15 @@ func (f *Foxnews) GetRssData() proto.PostPageData {
 	}
 }
 
-func (f *Foxnews) getData() {
+func (f *Foxnews) getData() map[string]*proto.Post {
 	fp := gofeed.NewParser()
+
+	data := make(map[string]*proto.Post)
 
 	feed, errFeed := fp.ParseURL(f.urlRss)
 	if errFeed != nil {
 		log.Println(errFeed)
-		return
+		return data
 	}
 	log.Println(feed.Title)
 	log.Println(feed.Image.URL)
@@ -98,11 +100,11 @@ func (f *Foxnews) getData() {
 		if v.Extensions["media"]["group"] != nil {
 			log.Printf("%#v \n", v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"])
 
-			if _, ok := f.data[slug.Make(v.Title)]; !ok {
+			if _, ok := data[slug.Make(v.Title)]; !ok {
 
 				t1, _ := time.Parse(time.RFC1123, v.Published)
 
-				f.data[slug.Make(v.Title)] = &proto.Post{
+				data[slug.Make(v.Title)] = &proto.Post{
 					Published:   t1.Unix(),
 					Categories:  v.Categories,
 					Title:       v.Title,
@@ -111,6 +113,7 @@ func (f *Foxnews) getData() {
 					Description: v.Description,
 					Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
 					SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
+					SourceTitle: feed.Title,
 				}
 
 			}
@@ -120,4 +123,5 @@ func (f *Foxnews) getData() {
 	}
 	f.title = feed.Title
 	f.image = feed.Image.URL
+	return data
 }

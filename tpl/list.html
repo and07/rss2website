@@ -1,18 +1,42 @@
-{{define "title"}}List{{end}}
+{{define "title"}}{{.PageTitle}} List{{end}}
 
 {{define "content"}}
 
 {{ range $key, $value := . }}
-{{ $key }} <br>
 
-    <h1>{{.PageTitle}}</h1>
-    <ul>
+
+
         {{range .Pages}}
-
-                <li><a href="/post/{{ $key }}/{{.Slug}}"><img src = "{{.SourceImage}}" style="height:45px;">&nbsp; {{.Published | formatAsDate}}&nbsp; {{.Title}}</a></li>
-
+        <div class="align-items-start d-flex justify-content-between result">
+            <div class="logo">
+                <img src="{{.SourceImage}}"  class="img-fluid">
+            </div>
+            <div class="info w-100">
+                <a href="/post/{{ $key }}/{{.Slug}}">{{.Title}}</a>
+            </div>
+            <div class="count">
+                <div class="show">-</div>
+            </div>
+            <div class="article">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <a href="/post/{{ $key }}/{{.Slug}}">
+                            <img src="{{.SourceImage}}"  class="img-fluid">
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <a href="/post/{{ $key }}/{{.Slug}}" class="title"><h1>{{.Title}}</h1></a>
+                        <p class="postheader">
+                            <a href="/post/{{ $key }}/{{.Slug}}" title="{{.SourceTitle}}" class="news-site"><img src="{{.SourceImage}}">{{.SourceTitle}}</a><a class="time">&nbsp; {{.Published | formatAsDate}}</a>
+                        </p>
+                        <p>{{.Title}}</p>
+                    </div>
+                    <div class="close"><i class="fas fa-times"></i></div>
+                </div>
+            </div>
+        </div>
         {{end}}
-    </ul>
+
 
 
 

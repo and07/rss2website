@@ -27,7 +27,7 @@ func NewForbes(list map[string]string) *Forbes {
 	f.urlRss = urlRss
 	f.data = make(map[string]*proto.Post)
 	f.exit = make(chan struct{})
-	f.getData()
+	f.data = f.getData()
 	f.Start()
 	return &f
 }
@@ -45,7 +45,7 @@ func (c *Forbes) Start() {
 					defer c.mx.Unlock()
 					defer log.Println("Tick")
 
-					c.getData()
+					c.data = c.getData()
 
 					//log.Printf("coin pair = %#v\n", marketName)
 					//log.Printf("book = %#v\n", book)
@@ -80,13 +80,15 @@ func (c *Forbes) GetRssData() proto.PostPageData {
 	}
 }
 
-func (c *Forbes) getData() {
+func (c *Forbes) getData() map[string]*proto.Post {
 	fp := gofeed.NewParser()
+
+	data := make(map[string]*proto.Post)
 
 	feed, errFeed := fp.ParseURL(c.urlRss)
 	if errFeed != nil {
 		log.Println(errFeed)
-		return
+		return data
 	}
 	log.Println(feed.Title)
 
@@ -99,11 +101,11 @@ func (c *Forbes) getData() {
 		if v.Extensions["media"]["content"] != nil {
 			//log.Printf("%#v \n", v.Extensions["media"]["thumbnail"][0].Attrs["url"])
 
-			if _, ok := c.data[slug.Make(v.Title)]; !ok {
+			if _, ok := data[slug.Make(v.Title)]; !ok {
 
 				//t1, _ := time.Parse(time.RFC1123Z, v.Published)
 
-				c.data[slug.Make(v.Title)] = &proto.Post{
+				data[slug.Make(v.Title)] = &proto.Post{
 					Published:   v.PublishedParsed.Unix(),
 					Categories:  v.Categories,
 					Title:       v.Title,
@@ -112,6 +114,7 @@ func (c *Forbes) getData() {
 					Description: v.Description,
 					Image:       v.Extensions["media"]["content"][0].Attrs["url"],
 					SourceImage: "//cdn2.mhpbooks.com/2016/12/forbes_1200x1200-235x235.jpg",
+					SourceTitle: feed.Title,
 				}
 
 			}
@@ -119,5 +122,6 @@ func (c *Forbes) getData() {
 		}
 
 	}
+	return data
 
 }

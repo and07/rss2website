@@ -13,8 +13,6 @@ type IRss interface {
 	Name() string
 }
 
-type Rss []IRss
-
 func main() {
 	log.SetFlags(log.Flags() | log.Lshortfile)
 

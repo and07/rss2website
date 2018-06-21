@@ -1,35 +1,138 @@
 {{ define "base" }}
-<!DOCTYPE html>
-<html>
+<!DOCTYPE>
+<html lang="ru">
 <head>
-    <meta charset="utf-8" />
-    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{{block "title" .}} {{end}}</title>
-    
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <link href="/static/style.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="/static/css/normalize.css" type="text/css" rel="stylesheet">
+    <link href="/static/plugins/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="/static/plugins/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+    <link href="/static/plugins/fontawesome/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="/static/css/stylesheet.css" type="text/css" rel="stylesheet">
+    <link href="/static/css/responsive.css" type="text/css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="/static/plugins/html5shiv/html5shiv.min.js"></script>
+    <script src="/static/plugins/respond/respond.min.js"></script>
+    <![endif]-->
     {{block "style" .}} {{end}}
 </head>
-
 <body>
-<div class="wrapper">
-    
-        <header class="header">
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="#">Test.<span>Com</span></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+<!--
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">10 минут</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Час</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Сутки</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Неделя</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Месяц</a>
+                            </li>
+                        </ul>
+                    </div>
+-->
+                </nav>
+            </div>
             {{block "header" .}} {{end}}
-        </header><!-- .header-->
-    
-        <main class="content">
-            {{template "content" .}}
-        </main><!-- .content -->
-    
-    </div><!-- .wrapper -->
-    
-    <footer class="footer">
-        {{block "footer" .}} {{end}}
-    </footer><!-- .footer -->
-    {{block "js" .}} {{end}}
+        </div>
+    </div>
+</header>
+<main class="mb-5">
+    <article>
+        <section>
+            <div class="container">
+                <div class="row">
+                        <div class="col-12 col-lg-2 mt-2">
+                            <div class="block">
+                                <div class="currency">
+                                    <div class="coinmarketcap-currency-widget" data-currency="bitcoin" data-base="USD" data-secondary="" data-ticker="false" data-rank="false" data-marketcap="false" data-volume="false" data-stats="USD" data-statsticker="false"></div>
+                                    <div class="coinmarketcap-currency-widget" data-currency="ethereum" data-base="USD" data-secondary="" data-ticker="false" data-rank="false" data-marketcap="false" data-volume="false" data-stats="USD" data-statsticker="false"></div>
+                                    <div class="coinmarketcap-currency-widget" data-currency="zcash" data-base="USD" data-secondary="" data-ticker="false" data-rank="false" data-marketcap="false" data-volume="false" data-stats="USD" data-statsticker="false"></div>
+                                    <div class="coinmarketcap-currency-widget" data-currency="verge" data-base="USD" data-secondary="" data-ticker="false" data-rank="false" data-marketcap="false" data-volume="false" data-stats="USD" data-statsticker="false"></div>
+                                </div>
+                            </div>
+                            <div class="block cpa">
+                                <a class="#">
+                                    <img src="/static/images/adv.png">
+                                    <h3>Lorem ipsum dolor sit amet, consectetur </h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent in metus ipsum.</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg mt-2 bg-white no-padding main-info">
+                            <!--
+                            <div class="menu">
+                                <ul>
+                                    <li class="active"><a href="#"><i class="fa fa-bitcoin"></i>Bitcoin</a></li>
+                                    <li><a href="#"><i class="fab fa-ethereum"></i>Ethereum</a></li>
+                                    <li><a href="#">Other</a></li>
+                                </ul>
+                            </div>
+                        -->
+
+                            {{template "content" .}}
+
+                        </div>
+                        <div class="col-12 col-lg-2 mt-2">
+                            <div class="block cpa">
+                                <a class="#">
+                                    <img src="/static/images/adv.png">
+                                    <h3>Lorem ipsum dolor sit amet, consectetur</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent in metus ipsum.</p>
+                                </a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </section>
+    </article>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <a class="navbar-brand" href="#">Test.<span>com</span></a>
+                <div class="footer-menu">
+                    <ul>
+                        <li class="active"><a href="#"><i class="fa fa-bitcoin"></i>Bitcoin</a></li>
+                        <li><a href="#"><i class="fab fa-ethereum"></i>Ethereum</a></li>
+                        <li><a href="#">Other</a></li>
+                    </ul>
+                </div>
+                <hr>
+                © 2018 MediaMetrics. Свежие котировки новостей
+            </div>
+            {{block "footer" .}} {{end}}
+        </div>
+    </div>
+</footer>
+<script src="/static/plugins/jquery/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/static/js/currency.js"></script>
+<script src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/js/main.js"></script>
+{{block "js" .}} {{end}}
 </body>
 </html>
-
 {{ end }}
