@@ -1,4 +1,4 @@
-From golang:latest
+FROM golang:latest
 
 RUN go get github.com/oxtoacart/bpool 
 RUN go get github.com/julienschmidt/httprouter 

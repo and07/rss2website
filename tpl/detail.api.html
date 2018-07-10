@@ -1,0 +1,20 @@
+
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <a href="{{.Link}}">
+                    <img src="{{.Image}}" class="img-fluid">
+                </a>
+            </div>
+            <div class="col-12 col-md-8">
+                <a href="{{.Link}}" class="title"><h1>{{.Title}}</h1></a>
+                <p class="postheader">
+                    <a href="{{.Link}}" title="{{.SourceTitle}}" class="news-site" ><img src="{{.SourceImage}}" class="img-fluid">{{.SourceTitle}}</a><a class="time">&nbsp; {{.Published | formatAsDate}}</a>
+                </p>
+                <p>{{.Description | safe}}</p>
+            </div>
+            <div class="close" onclick="((e) =>{
+                if(e.parentElement && e.parentElement.parentElement) {
+                    let el =  e.parentElement.parentElement
+                    el.classList.remove('open')
+                } })(this)"><i class="fas fa-times"></i></div>
+        </div>

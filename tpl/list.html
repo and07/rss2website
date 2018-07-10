@@ -42,6 +42,45 @@
 
 {{ end }}
 
+<script>
+        function ajaxGet(url) {
+            return new Promise(function(resolve, reject) {
+                let req = new XMLHttpRequest();
+                req.open("GET", url);
+                req.onload = function() {
+                    if (req.status === 200) {
+                        resolve(req.response);
+                    } else {
+                        reject(new Error(req.statusText));
+                    }
+                };
+         
+                req.onerror = function() {
+                    reject(new Error("Network error"));
+                };
+         
+                req.send();
+            });
+        }
 
+        Array.from(document.querySelectorAll(".info.w-100 > a")).forEach(link => {
+            link.addEventListener('click', function(event) {
+                
+                    event.preventDefault();
+                    //console.log(link.getAttribute("href"))
+                    if (link.parentElement && link.parentElement.parentElement){
+                        let elem = link.parentElement.parentElement.querySelector(".article") 
+                        //console.log(link.parentElement.parentElement.querySelector(".article").classList.add("open"))
+                        ajaxGet("/api/v1" + link.getAttribute("href"))
+                        .then((r) => {
+                            //console.log(r) 
+                            elem.innerHTML = r
+                            elem.classList.add("open")
+                        })
+                        .catch((error) => { console.log(error) });
+                    }
 
+            });
+        });
+</script>
 {{end}}

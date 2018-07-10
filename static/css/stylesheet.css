@@ -173,7 +173,7 @@ header {
 }
 .article.open {
     display: block;
-    position: relative;
+    /*position: relative;*/
     margin-bottom: 16px;
 }
 .article h1 {

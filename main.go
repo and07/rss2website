@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 
@@ -67,6 +68,16 @@ func main() {
 		ir := posts[rss].GetRssData()
 
 		tpl.RenderTemplate(w, "detail.html", ir.Pages[slug])
+	})
+
+	r.GET("/api/v1/post/:rss/:slug", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		log.Println("detail api v1")
+		slug := ps.ByName("slug")
+		rss := ps.ByName("rss")
+		ir := posts[rss].GetRssData()
+		tmpl := template.Must(template.New("detail.api.html").Funcs(tpl.Fmap()).ParseFiles("tpl/detail.api.html"))
+		log.Println(tmpl)
+		tmpl.Execute(w, ir.Pages[slug])
 	})
 
 	http.ListenAndServe(":3000", r)

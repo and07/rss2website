@@ -4,10 +4,12 @@
 
 Clone it into `$GOPATH/src/github.com/and07`.
 
-## 1. Build Docker image with program in it
+## 1. Build and run Docker image with program in it
 
 ```
-sudo docker build -t and07/rss2site .
+docker-compose up --build
+
+# 
 ```
 
 ## 2. Show image 
@@ -15,19 +17,21 @@ sudo docker build -t and07/rss2site .
 sudo docker images
 ```
 
-## 3. Run it
-
-Now that we built the image, let's run it.
-
-```
-sudo docker run -p 3000:3000 --rm and07/rss2site
-```
-
 Surf to: http://127.0.0.1:3000
 
 
 
 #### more
+
+
+
+sudo docker build -t and07/rss2site .
+
+
+
+sudo docker run -p 3000:3000 --rm and07/rss2site
+
+
 
 https://stackoverflow.com/questions/29852583/docker-compose-accessing-postgres-shell-psql/37766141#37766141
 ```

@@ -51,11 +51,15 @@ func (t *Template) Init() {
 	t.loadTemplates()
 }
 
-func (t *Template) loadTemplates() {
+func (t *Template) Fmap() template.FuncMap {
 	fmap := template.FuncMap{
 		"formatAsDate": formatAsDate,
 		"safe":         safe,
 	}
+	return fmap
+}
+
+func (t *Template) loadTemplates() {
 
 	if t.templates == nil {
 		t.templates = make(map[string]*template.Template)
@@ -84,7 +88,7 @@ func (t *Template) loadTemplates() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		t.templates[fileName] = template.Must(t.templates[fileName].Funcs(fmap).ParseFiles(files...))
+		t.templates[fileName] = template.Must(t.templates[fileName].Funcs(t.Fmap()).ParseFiles(files...))
 	}
 
 	log.Println("templates loading successful")
