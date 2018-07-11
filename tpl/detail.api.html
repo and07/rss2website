@@ -8,7 +8,7 @@
             <div class="col-12 col-md-8">
                 <a href="{{.Link}}" class="title"><h1>{{.Title}}</h1></a>
                 <p class="postheader">
-                    <a href="{{.Link}}" title="{{.SourceTitle}}" class="news-site" ><img src="{{.SourceImage}}" class="img-fluid">{{.SourceTitle}}</a><a class="time">&nbsp; {{.Published | formatAsDate}}</a>
+                    <a href="{{.Link}}" title="{{.SourceTitle}}" class="news-site" ><img src="{{.SourceImage}}" class="img-fluid" style="width:70px;">{{.SourceTitle}}</a><a class="time">&nbsp; {{.Published | formatAsDate}}</a>
                 </p>
                 <p>{{.Description | safe}}</p>
             </div>
