@@ -18,3 +18,5 @@ sudo certbot certonly --agree-tos --email admin@example.com --webroot -w /var/li
 sudo systemctl reload nginx
 
 0 */12 * * * root test -x /usr/bin/certbot -a \! -d /run/systemd/system && perl -e 'sleep int(rand(3600))' && certbot -q renew --renew-hook "systemctl reload nginx"
+
+43 6 * * * certbot renew --post-hook "systemctl reload nginx"
