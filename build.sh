@@ -34,4 +34,4 @@ go get github.com/mmcdole/gofeed
 
 
 #figlet install rss2website
-#go get github.com/and07/rss2website
+#go get gitlab.com/and07/rss2website

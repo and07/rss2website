@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
+	"strings"
 	"sync"
 	"time"
 
-	proto "github.com/and07/rss2website/proto"
 	"github.com/gosimple/slug"
 	"github.com/mmcdole/gofeed"
+	proto "gitlab.com/and07/rss2website/proto"
 )
 
 type Foxnews struct {
@@ -104,6 +105,8 @@ func (f *Foxnews) getData() map[string]*proto.Post {
 
 				t1, _ := time.Parse(time.RFC1123, v.Published)
 
+				img := strings.Replace(v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"], "http://", "//", -1)
+
 				data[slug.Make(v.Title)] = &proto.Post{
 					Published:   t1.Unix(),
 					Categories:  v.Categories,
@@ -111,7 +114,7 @@ func (f *Foxnews) getData() map[string]*proto.Post {
 					Slug:        slug.Make(v.Title),
 					Link:        v.Link,
 					Description: v.Description,
-					Image:       v.Extensions["media"]["group"][0].Children["content"][0].Attrs["url"],
+					Image:       img,
 					SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
 					SourceTitle: feed.Title,
 				}

@@ -4,7 +4,7 @@ import (
 	"log"
 	"testing"
 
-	proto "github.com/and07/rss2website/proto"
+	proto "gitlab.com/and07/rss2website/proto"
 )
 
 func TestForbesData(t *testing.T) {
