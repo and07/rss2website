@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
+	"strings"
 	"sync"
 	"time"
 
-	proto "github.com/and07/rss2website/proto"
 	"github.com/gosimple/slug"
 	"github.com/mmcdole/gofeed"
+	proto "gitlab.com/and07/rss2website/proto"
 )
 
 type Forbes struct {
@@ -105,6 +106,8 @@ func (c *Forbes) getData() map[string]*proto.Post {
 
 				//t1, _ := time.Parse(time.RFC1123Z, v.Published)
 
+				img := strings.Replace(v.Extensions["media"]["content"][0].Attrs["url"], "http://", "//", -1)
+
 				data[slug.Make(v.Title)] = &proto.Post{
 					Published:   v.PublishedParsed.Unix(),
 					Categories:  v.Categories,
@@ -112,7 +115,7 @@ func (c *Forbes) getData() map[string]*proto.Post {
 					Slug:        slug.Make(v.Title),
 					Link:        v.Link,
 					Description: v.Description,
-					Image:       v.Extensions["media"]["content"][0].Attrs["url"],
+					Image:       img,
 					SourceImage: "//cdn2.mhpbooks.com/2016/12/forbes_1200x1200-235x235.jpg",
 					SourceTitle: feed.Title,
 				}

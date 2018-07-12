@@ -1,7 +1,7 @@
 package main
 
 import (
-	proto "github.com/and07/rss2website/proto"
+	proto "gitlab.com/and07/rss2website/proto"
 )
 
 func getRSSList() proto.RssList {

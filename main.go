@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	proto "github.com/and07/rss2website/proto"
+	proto "gitlab.com/and07/rss2website/proto"
 	"github.com/julienschmidt/httprouter"
 )
 
