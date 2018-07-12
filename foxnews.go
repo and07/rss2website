@@ -113,7 +113,7 @@ func (f *Foxnews) getData() map[string]*proto.Post {
 					Title:       v.Title,
 					Slug:        slug.Make(v.Title),
 					Link:        strings.Replace(v.Link, "http://", "//", -1),
-					Description: v.Description,
+					Description: strings.Replace(v.Description, "http://", "//", -1),
 					Image:       img,
 					SourceImage: "//global.fncstatic.com/static/orion/styles/img/fox-news/favicons/apple-touch-icon-60x60.png",
 					SourceTitle: feed.Title,
