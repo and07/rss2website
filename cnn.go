@@ -113,7 +113,7 @@ func (c *Cnn) getData() map[string]*proto.Post {
 					Categories:  v.Categories,
 					Title:       v.Title,
 					Slug:        slug.Make(v.Title),
-					Link:        v.Link,
+					Link:        strings.Replace(v.Link, "http://", "//", -1),
 					Description: v.Description,
 					Image:       img,
 					SourceImage: "//i.cdn.turner.com/money/.element/cnnm-3.0/img/logo/cnnmoney_blue.svg",

@@ -113,7 +113,7 @@ func (c *Forbes) getData() map[string]*proto.Post {
 					Categories:  v.Categories,
 					Title:       v.Title,
 					Slug:        slug.Make(v.Title),
-					Link:        v.Link,
+					Link:        strings.Replace(v.Link, "http://", "//", -1),
 					Description: v.Description,
 					Image:       img,
 					SourceImage: "//cdn2.mhpbooks.com/2016/12/forbes_1200x1200-235x235.jpg",
