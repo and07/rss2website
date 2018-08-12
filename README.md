@@ -17,7 +17,7 @@ docker-compose up --build
 sudo docker images
 ```
 
-Surf to: http://127.0.0.1:3000
+Surf to: http://127.0.0.1
 
 
 
